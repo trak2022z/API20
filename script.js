@@ -1,32 +1,39 @@
-const url = 'https://node16.tomkrok1.repl.co';
-
-const categoriesList = document.getElementById('categories-list');
-const categoryTitle = document.getElementById('category-title');
-const joke = document.getElementById('joke');
-const response = document.getElementById('response');
-
-fetch('https://node16.tomkrok1.repl.co/jokebook/categories')
-  .then(response => response.text())
-  .then(categories => {
-    const categoriesArray = categories.split('\n').filter(category => category !== '');
-    categoriesArray.forEach(category => {
-      const li = document.createElement('li');
-      li.textContent = category;
-      li.addEventListener('click', () => {
-        getJoke(category);
+// Make a GET request to the server to get the jokes
+    fetch('https://node16.tomkrok1.repl.co/jokebook/categories')
+      .then(response => response.json())
+      .then(categories => {
+        // Create a select element with the categories
+        const select = document.createElement('select');
+        categories.forEach(category => {
+          const option = document.createElement('option');
+          option.value = category;
+          option.textContent = category;
+          select.appendChild(option);
+        });
+        // Add an event listener to the select element to get the jokes when a category is selected
+        select.addEventListener('change', () => {
+          const category = select.value;
+          fetch(`https://node16.tomkrok1.repl.co/jokebook/joke/${category}`)
+            .then(response => response.json())
+            .then(joke => {
+              // Display the joke in the page
+              const jokeContainer = document.querySelector('.joke-container');
+              jokeContainer.innerHTML = '';
+              const jokeElement = document.createElement('div');
+              jokeElement.classList.add('joke');
+              jokeElement.innerHTML = `
+                <p class="joke-text">${joke.joke}</p>
+                <p class="joke-response">${joke.response}</p>
+              `;
+              jokeContainer.appendChild(jokeElement);
+            })
+            .catch(error => {
+              console.error(error);
+            });
+        });
+        // Add the select element to the page
+        document.body.insertBefore(select, document.querySelector('.joke-container'));
+      })
+      .catch(error => {
+        console.error(error);
       });
-      categoriesList.appendChild(li);
-    });
-  });
-
-function getJoke(category) {
-  fetch('https://node16.tomkrok1.repl.co/jokebook/joke/${category}')
-    .then(response => response.json())
-    .then(joke => {
-      categoryTitle.textContent = category.toUpperCase();
-      joke.textContent = joke.joke;
-      response.textContent = joke.response;
-      console.log(joke.joke);
-    })
-    .catch(error => console.error(error));
-}
