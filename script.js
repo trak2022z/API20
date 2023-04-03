@@ -1,29 +1,32 @@
 const url = 'https://node16.tomkrok1.repl.co';
 
-const category = window.location.pathname.split('/').pop();
-      const jokeContainer = document.getElementById('joke-container');
-      const getJokeBtn = document.getElementById('get-joke-btn');
+const categoriesList = document.getElementById('categories-list');
+const categoryTitle = document.getElementById('category-title');
+const joke = document.getElementById('joke');
+const response = document.getElementById('response');
 
-      // Fetch a random joke from the server
-      async function fetchJoke() {
-        const response = await fetch('https://node16.tomkrok1.repl.co/jokebook/joke/${category}');
-        const joke = await response.json();
-        return joke;
-      }
-
-      // Display the joke on the page
-      function displayJoke(joke) {
-        jokeContainer.innerHTML = `
-          <p>${joke.joke}</p>
-          <p>${joke.response}</p>
-        `;
-      }
-
-      // Add an event listener to the button to fetch a new joke when clicked
-      getJokeBtn.addEventListener('click', async () => {
-        const joke = await fetchJoke();
-        displayJoke(joke);
+fetch('https://node16.tomkrok1.repl.co/jokebook/categories')
+  .then(response => response.text())
+  .then(categories => {
+    const categoriesArray = categories.split('\n').filter(category => category !== '');
+    categoriesArray.forEach(category => {
+      const li = document.createElement('li');
+      li.textContent = category;
+      li.addEventListener('click', () => {
+        getJoke(category);
       });
+      categoriesList.appendChild(li);
+    });
+  });
 
-      // Fetch and display a joke when the page loads
-      fetchJoke().then(joke => displayJoke(joke));
+function getJoke(category) {
+  fetch('https://node16.tomkrok1.repl.co/jokebook/joke/${category}')
+    .then(response => response.json())
+    .then(joke => {
+      categoryTitle.textContent = category.toUpperCase();
+      joke.textContent = joke.joke;
+      response.textContent = joke.response;
+      console.log(joke.joke);
+    })
+    .catch(error => console.error(error));
+}

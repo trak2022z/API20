@@ -1,21 +1,31 @@
-body {
-  font-family: Arial, sans-serif;
-}
-
-h1 {
-  text-align: center;
-  margin-top: 50px;
-}
-
-ul {
-  list-style: none;
-  padding: 0;
+.container {
+  max-width: 800px;
   margin: 0 auto;
-  max-width: 500px;
+  padding: 20px;
 }
 
-li {
-  border: 1px solid #ddd;
-  padding: 10px;
-  margin-bottom: 10px;
+h1, h2 {
+  text-align: center;
+}
+
+.categories, .jokes {
+  margin-bottom: 20px;
+}
+
+.categories li {
+  list-style: none;
+  display: inline-block;
+  margin-right: 10px;
+  font-size: 1.2em;
+  cursor: pointer;
+}
+
+.jokes p {
+  margin-top: 10px;
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.jokes #response {
+  margin-bottom: 20px;
 }
