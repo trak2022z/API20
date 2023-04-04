@@ -1,5 +1,7 @@
+APIurl = 'https://node16.tomkrok1.repl.co';
+
 // Make a GET request to the server to get the jokes
-    fetch('https://node16.tomkrok1.repl.co/jokebook/categories')
+    fetch(APIurl + '/jokebook/categories')
       .then(response => response.json())
       .then(categories => {
         // Create a select element with the categories
@@ -10,10 +12,11 @@
           option.textContent = category;
           select.appendChild(option);
         });
+        
         // Add an event listener to the select element to get the jokes when a category is selected
         select.addEventListener('change', () => {
           const category = select.value;
-          fetch(`https://node16.tomkrok1.repl.co/jokebook/joke/${category}`)
+          fetch(APIurl + `/jokebook/joke/${category}`)
             .then(response => response.json())
             .then(joke => {
               // Display the joke in the page
